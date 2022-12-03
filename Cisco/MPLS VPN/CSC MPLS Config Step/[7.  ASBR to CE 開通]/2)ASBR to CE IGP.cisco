@@ -1,0 +1,27 @@
+2)ASBR to CE IGP
+
+[R6]
+conf t
+router ospf 2 vrf vpn2
+ network 10.1.68.0 0.0.0.255 area 0
+ end
+
+[R8]
+conf t
+router ospf 2
+ network 10.1.68.0 0.0.0.255 area 0
+ end
+
+[R7]
+conf t
+router ospf 2 vrf vpn2
+ network 10.1.79.0 0.0.0.255 area 0
+ end
+
+[R9]
+conf t
+router ospf 2
+ network 10.1.79.0 0.0.0.255 area 0
+ end
+
+ 

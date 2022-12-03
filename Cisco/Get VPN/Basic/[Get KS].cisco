@@ -1,0 +1,42 @@
+[Get KS]
+conf t
+crypto isakmp policy 10
+ encr aes
+ authentication pre-share
+ group 5
+ lifetime 3600
+ exit
+crypto isakmp key 0 cisco address 0.0.0.0
+crypto ipsec transform-set TRANS esp-aes 128 esp-sha-hmac
+crypto ipsec profile VPN-profile
+ set transform-set TRANS
+ exit
+
+crypto key gen rsa label KEYPAIR mod 1024 exportable
+
+ip access-list ex VPN-acl
+ permit icmp any any
+ exit
+
+crypto gdoi group GDOI
+ identity number 1234
+ server local
+  rekey algo aes 256
+  rekey lifetime seconds 3600
+  rekey authentication mypubkey rsa KEYPAIR
+  rekey transport unicast
+  sa ipsec 10
+   profile VPN-profile
+   match address ipv4 VPN-acl
+   exit
+  address ipv4 10.1.1.1
+  exit
+ exit
+
+crypto map MAP-gdoi 10 gdoi
+ set group GDOI
+ exit
+int tun 0
+ cryp map MAP-gdoi
+
+

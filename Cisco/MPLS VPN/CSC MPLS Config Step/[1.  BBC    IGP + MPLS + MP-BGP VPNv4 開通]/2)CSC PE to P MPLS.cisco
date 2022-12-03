@@ -1,0 +1,28 @@
+2)CSC PE to P      MPLS
+
+[R1]
+conf t
+mpls ldp router-id lo0
+mpls label range 100 199
+int g0/0
+ mpls ip
+ end
+  
+
+[R2]
+conf t
+mpls ldp router-id lo0
+mpls label range 200 299
+int ran g0/0-1
+ mpls ip
+ end
+
+[R3]
+conf t
+mpls ldp router-id lo0
+mpls label range 300 399
+int g0/0
+ mpls ip
+ end
+
+ 

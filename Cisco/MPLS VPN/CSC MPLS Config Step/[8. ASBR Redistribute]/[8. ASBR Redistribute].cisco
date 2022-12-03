@@ -1,0 +1,21 @@
+[8. ASBR Redistribute](option2)
+
+[R6]
+conf t
+router ospf 2 vrf vpn2
+ redistribute bgp 2 subnets
+router bgp 2
+ address-family ipv4 vrf vpn2
+  redistribute ospf 2 vrf vpn 2 match internal external
+  end
+
+[R7]
+conf t
+router ospf 2 vrf vpn2
+ redistribute bgp 2 subnetss
+router bgp 2
+ address-family ipv4 vrf vpn2
+  redistribute ospf 2 vrf vpn2 match internal external
+  end
+
+  

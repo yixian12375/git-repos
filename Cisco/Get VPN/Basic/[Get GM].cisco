@@ -1,0 +1,20 @@
+[Get GM]
+conf t
+crypto isakmp policy 10
+ encr aes
+ authentication pre-share
+ group 5
+ lifetime 3600
+ exit
+ 
+crypto isakmp key 0 cisco address 10.1.1.1
+
+crypto gdoi group GDOI
+ server address ipv4 10.1.1.1
+ identity number 1234
+ exit
+crypto map MAP-gdoi 10 gdoi
+ set group GDOI
+ exit
+int tunn 0
+ cryp map MAP-gdoi

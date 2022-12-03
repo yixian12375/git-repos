@@ -1,0 +1,35 @@
+2)CSC CE to ASBR   MPLS
+
+[R4]
+conf t
+mpls ldp router-id lo0
+mpls label range 400 499
+int ran g0/0-1
+ mpls ip
+ end
+
+[R5]
+conf t
+mpls ldp router-id lo0
+mpls label range 500 599
+int ran g0/0-1
+ mpls ip
+ end
+
+[R6]
+conf t
+mpls ldp router-id lo0
+mpls label range 600 699
+int g0/0
+ mpls ip
+ end
+
+[R7]
+conf t
+mpls ldp router-id lo0
+mpls label range 700 799
+int g0/0
+ mpls ip
+ end
+
+ 

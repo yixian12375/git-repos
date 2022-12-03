@@ -1,0 +1,21 @@
+[4. CSC PE Redistribute]
+
+[R1]
+conf t
+router ospf 1 vrf vpn1
+ redistribute bgp 1 subnets
+router bgp 1
+ address-family ipv4 vrf vpn1
+  redistribute ospf 1 match internal external
+  end
+
+[R3]
+conf t
+router ospf 1 vrf vpn1
+ redistribute bgp 1 subnets
+router bgp 1
+ address-family ipv4 vrf vpn1
+  redistribute ospf 1 match internal external
+  end
+
+  

@@ -1,0 +1,29 @@
+1)CSC PE to CSC CE VRF
+
+CSC PE VRF
+{
+    [R1]
+    conf t
+    ip vrf vpn1
+    rd 1:11
+    route-target export 1:11
+    route-target import 1:13
+    exit
+    int g0/1
+    ip vrf forwarding vpn1
+    ip add 10.1.14.1 255.255.255.0
+    end
+
+    [R3]
+    conf t
+    ip vrf vpn1
+    rd 1:13
+    route-target export 1:13
+    route-target import 1:11
+    exit
+    int g0/1
+    ip vrf forwarding vpn1
+    ip add 10.1.35.3 255.255.255.0
+    end
+}
+

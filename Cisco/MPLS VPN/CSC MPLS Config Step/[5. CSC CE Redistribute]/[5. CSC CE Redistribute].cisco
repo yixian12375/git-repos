@@ -1,0 +1,19 @@
+[5. CSC CE Redistribute]
+
+[R4]
+conf t
+router ospf 200
+ redistribute bgp 2 subnets
+router bgp 2
+ redistribute ospf 200 match internal external
+  end
+
+[R5]
+conf t
+router ospf 200
+ redistribute bgp 2 subnets
+router bgp 2
+ redistribute ospf 200 match internal external
+  end
+
+  

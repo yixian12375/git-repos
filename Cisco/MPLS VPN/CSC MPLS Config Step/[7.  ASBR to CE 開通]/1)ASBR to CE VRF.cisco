@@ -1,0 +1,27 @@
+1)ASBR to CE VRF
+{
+    [R6]
+    conf t
+    ip vrf vpn2
+    rd 2:16
+    route-target export 1:16
+    route-target import 1:17
+    exit
+    int g0/1
+    ip vrf forwarding vpn2
+    ip add 10.1.68.6 255.255.255.0
+    end
+
+    [R7]
+    conf t
+    ip vrf vpn2
+    rd 2:17
+    route-target export 1:17
+    route-target import 1:16
+    exit
+    int g0/1
+    ip vrf forwarding vpn2
+    ip add 10.1.79.7 255.255.255.0
+    end
+}
+

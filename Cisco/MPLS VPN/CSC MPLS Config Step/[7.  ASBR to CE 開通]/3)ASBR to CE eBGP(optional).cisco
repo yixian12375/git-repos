@@ -1,0 +1,41 @@
+3)ASBR to CE eBGP(optional)
+
+[R6]
+conf t
+router bgp 2
+ address-family ipv4 vrf vpn2
+  neighbor 10.1.68.8 remote-as 3
+  neighbor 10.1.68.8 activate
+  end
+
+[R8]
+conf t
+router ospf 2
+ redistribute bgp 3 subnets
+router bgp 3
+ neighbor 10.1.68.6 remote-as 2
+ address-family ipv4
+  redistribute ospf 2 match internal external
+  neighbor 10.1.68.6 activate
+  end
+
+[R7]
+conf t
+router bgp 2
+ address-family ipv4 vrf vpn2
+  neighbor 10.1.79.9 remote-as 3
+  neighbor 10.1.79.9 activate
+  end
+
+[R9]
+conf t
+router ospf 2
+ redistribute bgp 3 subnets
+router bgp 3
+ neighbor 10.1.79.7 remote-as 2
+  address-family ipv4
+  redistribute ospf 2 match internal external
+  neighbor 10.1.79.7 activate
+  end
+
+  

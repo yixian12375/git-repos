@@ -1,0 +1,29 @@
+CSC MPLS VPN config step
+
+BBC => Backbone Carrier
+CC  => Customer Carrier
+CE  => Customer Edge
+
+[1.  BBC    IGP + MPLS + MP-BGP VPNv4 開通]
+    1)CSC PE to P   IGP
+    2)CSC PE to P      MPLS
+    3)CSC PE to P      MP-BGP VPNv4
+[2.  CC     IGP + MPLS 開通]
+    1)CSC CE to ASBR IGP
+    2)CSC CE to ASBR MPLS
+[3.  CSC PE to CSC CE 開通]
+    1)CSC PE to CSC CE VRF
+    2)CSC PE to CSC CE IGP
+    3)CSC PE to CSC CE eBGP
+[4. CSC PE Redistribute]
+[5. CSC CE Redistribute]
+[6. ASBR to ASBR MP-BGP VPNv4 開通]
+[7.  ASBR to CE 開通]
+    1)ASBR to CE VRF
+    2)ASBR to CE IGP
+    3)ASBR to CE eBGP(optional)
+[8. ASBR Redistribute]
+
+
+
+

@@ -1,0 +1,27 @@
+2)CSC PE to CSC CE IGP
+
+[R1]
+conf t
+router ospf 1 vrf vpn1
+ network 10.1.14.0 0.0.0.255 area 0
+ end
+
+[R4]
+conf t
+router ospf 1
+ network 10.1.14.0 0.0.0.255 area 0
+ end
+
+[R3]
+conf t
+router ospf 1 vrf vpn1
+ network 10.1.35.0 0.0.0.255 area 0
+ end
+
+[R5]
+conf t
+router ospf 1
+ network 10.1.35.0 0.0.0.255 area 0
+ end
+
+

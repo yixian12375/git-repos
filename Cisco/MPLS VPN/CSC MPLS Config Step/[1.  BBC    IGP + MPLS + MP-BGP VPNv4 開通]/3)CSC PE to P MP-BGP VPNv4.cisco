@@ -1,0 +1,25 @@
+3)CSC PE to P      MP-BGP VPNv4
+
+[R1]
+conf t
+router bgp 1
+ no bgp default ipv4-unicast
+ neighbor 3.3.3.3 remote-as 1
+ neighbor 3.3.3.3 update-source Loopback0
+ address-family vpnv4
+  neighbor 3.3.3.3 activate
+  neighbor 3.3.3.3 send-community extended
+ exit-address-family
+ end
+
+[R3]
+conf t
+router bgp 1
+ no bgp default ipv4-unicast
+ neighbor 1.1.1.1 remote-as 1
+ neighbor 1.1.1.1 update-source Loopback0
+ address-family vpnv4
+  neighbor 1.1.1.1 activate
+  neighbor 1.1.1.1 send-community extended
+ exit-address-family
+ end

@@ -1,0 +1,41 @@
+3)CSC PE to CSC CE eBGP
+
+[R1]
+conf t
+router bgp 1
+ address-family ipv4 vrf vpn1
+  neighbor 10.1.14.4 remote-as 2
+  neighbor 10.1.14.4 activate
+  neighbor 10.1.14.4 as-override
+  neighbor 10.1.14.4 send-label
+  end
+
+[R4]
+conf t
+router bgp 2
+ neighbor 10.1.14.1 remote-as 1
+ address-family ipv4
+  neighbor 10.1.14.1 activate
+  neighbor 10.1.14.1 send-label
+  end
+
+[R3]
+conf t
+router bgp 1
+ address-family ipv4 vrf vpn1
+  neighbor 10.1.35.5 remote-as 2
+  neighbor 10.1.35.5 activate
+  neighbor 10.1.35.5 as-override
+  neighbor 10.1.35.5 send-label
+  end
+
+[R5]
+conf t
+router bgp 2
+ neighbor 10.1.35.3 remote-as 1
+ address-family ipv4
+  neighbor 10.1.35.3 activate
+  neighbor 10.1.35.3 send-label
+  end
+
+  

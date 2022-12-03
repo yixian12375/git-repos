@@ -1,0 +1,41 @@
+do sh crypto isakmp policy
+[IPsec VPN]
+[Phase1]
+conf t
+crypto isakmp policy 10
+ encryption aes
+ hash md5
+ auth pre-share
+ group 5
+ lifetime 3600
+crypto isakmp key 6 123 addess 10.1.1.1
+
+[Phase2]
+access-list 100 permit 10.1.1.0 0.0.0.255 10.1.1.0 0.0.0.255
+crypto transform-set TRANS esp-sha esp-md5-hmac
+ mode tunnel
+ exit
+crypto map VPN 10 ipsec-isakmp
+ set transform-set TRANS
+ set peer 10.1.1.1
+ match address 100
+int tun0
+ crypto map VPN
+
+
+
+[GRE over IPsec]
+conf t
+crypto isakmp policy 10
+ encryption aes
+ hash md5
+ auth pre-share
+ group 5
+ lifetime 3600
+ exit
+crypto isakmp key 123 address 0.0.0.0
+crypto ipsec transform-set TRANS esp-aes esp-md5-hmac
+ mode trans
+ exit
+crypto ipsec profile VPN
+ set transform-set TRANS

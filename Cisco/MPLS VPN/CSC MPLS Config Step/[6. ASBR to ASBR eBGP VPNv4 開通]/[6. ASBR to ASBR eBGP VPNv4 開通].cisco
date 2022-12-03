@@ -1,0 +1,25 @@
+[6. ASBR to ASBR eBGP VPNv4 開通]
+
+[R6]
+conf t
+router bgp 2
+ no bgp def ipv4
+ neighbor 7.7.7.7 remote-as 2
+ neighbor 7.7.7.7 up lo0
+ address-family vpnv4
+  neighbor 7.7.7.7 activate
+  neighbor 7.7.7.7 send-community extended
+  end
+
+[R7]
+conf t
+router bgp 2
+ no bgp def ipv4
+ neighbor 6.6.6.6 remote-as 2
+ neighbor 6.6.6.6 up lo0
+ address-family vpnv4
+  neighbor 6.6.6.6 activate
+  neighbor 6.6.6.6 send-community extended
+  end
+
+  
