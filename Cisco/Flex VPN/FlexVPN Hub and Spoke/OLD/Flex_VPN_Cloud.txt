@@ -1,0 +1,15 @@
+[FlexVPN Hub and Spoke]
+conf t
+hostname Flex_VPN_Cloud
+int g0/0
+ ip add 192.168.0.254 255.255.255.0
+ no sh
+int g0/1
+ ip add 192.168.1.254 255.255.255.0
+ no sh
+int g0/2
+ ip add 192.168.2.254 255.255.255.0
+ no sh
+ exit
+router eigrp 1
+ network 0.0.0.0

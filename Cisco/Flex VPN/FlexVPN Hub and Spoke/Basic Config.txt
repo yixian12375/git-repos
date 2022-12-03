@@ -1,0 +1,53 @@
+[HUB]
+conf t
+hostname HUB
+int g0/0
+ ip add 192.1.80.1 255.255.255.0
+ no sh
+int lo8
+ ip add 8.8.8.8 255.255.255.255
+ exit
+ip route 0.0.0.0 0.0.0.0 192.1.80.2
+
+
+[SPOKE1]
+conf t
+hostname SPOKE1
+int g0/0
+ ip add 192.1.10.1 255.255.255.0
+ no sh
+int lo0
+ ip add 1.1.1.1 255.255.255.255
+ exit
+ip route 192.1.80.0 255.255.255.0 192.1.10.2
+
+[SPOKE2]
+conf t
+hostname SPOKE2
+int g0/0
+ ip add 192.1.20.1 255.255.255.0
+ no sh
+int lo0
+ ip add 2.2.2.2 255.255.255.255
+ exit
+ip route 192.1.80.0 255.255.255.0 192.1.20.2
+
+[Cloud]
+conf t
+hostname Cloud
+int g0/0
+ ip add 192.1.80.2 255.255.255.0
+ no sh
+int g0/1
+ ip add 192.1.10.2 255.255.255.0
+ no sh
+int g0/2
+ ip add 192.1.20.2 255.255.255.0
+ no sh
+
+
+
+clear crypto sa
+clear crypto isakmp
+clear crypto ikev2 sa
+clear crypto session

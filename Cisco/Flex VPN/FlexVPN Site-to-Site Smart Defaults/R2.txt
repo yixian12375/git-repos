@@ -1,0 +1,31 @@
+[FlexVPN Site-to-Site Smart Defaults]
+conf t
+hostname R2
+int g0/0
+ ip add 192.168.12.2 255.255.255.0
+ no sh
+
+[keyring]
+crypto ikev2 keyring IKEV2_KEYRING
+ peer R1
+ address 192.168.12.1
+ pre-shared key local IKEV2_PSK
+ pre-shared key remote IKEV2_PSK
+crypto ikev2 profile default
+ match identity remote fqdn R1.IKEV2.LAB
+ identity local fqdn R2.IKEV2.LAB
+ authentication local pre-share
+ authentication remote pre-share
+ keyring local IKEV2_KEYRING
+
+[Tunnel]
+int tun 0
+ ip add 172.16.12.2 255.255.255.0
+ tun source g0/0
+ tun dest 192.168.12.1
+ tun protection ipsec profile default
+ 
+show crypto ikev2 policy
+show crypto ikev2 profile
+show crypto ikev2 sa
+show crypto ipsec sa

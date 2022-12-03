@@ -1,0 +1,42 @@
+[FlexVPN Hub and Spoke]
+conf t
+hostname SPOKE2
+int g0/0
+ ip add 192.168.2.1 255.255.255.0
+ no sh
+int lo0
+ ip add 2.2.2.2 255.255.255.255
+ exit
+int lo172
+ ip add 172.16.1.2 255.255.255.255
+ exit
+router eigrp 1
+ network 0.0.0.0
+
+[keyring]
+crypto ikev2 keyring IKEV2_KEYRING
+ peer HUB
+ address 192.168.0.1
+ pre-shared local IKEV2_PSK
+ pre-shared remote IKEV2_PSK
+ 
+[profile]
+crypto ikev2 profile IKEV2_PROFILE
+ match identity remote fqdn HUB.IKEV2.LAB
+ identity local fqdn SPOKE2.IKEV2.LAB
+ authentication local pre-share
+ authentication remote pre-share
+ keyring local IKEV2_KEYRING
+
+[ipsec profile]
+crypto ipsec transform-set TRANS esp-aes 256 esp-sha256-hmac
+crypto ipsec profile IPSEC_PROFILE
+ set ikev2-profile IKEV2_PROFILE
+ set transform-set TRANS
+
+[sVTI]
+int tunnel 0
+ ip unnumbered loopback 172
+ tunnel source g0/0
+ tunnel dest 192.168.0.1
+ tunnel protection ipsec profile IPSEC_PROFILE

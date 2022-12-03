@@ -1,0 +1,62 @@
+[FlexVPN Spoke to Spoke Pool and BGP]
+conf t
+hostname hub
+int g0/0
+ ip add 192.168.1.254 255.255.255.0
+ no sh
+int lo1
+ ip add 172.16.1.254 255.255.255.255
+ 
+[keyring]
+crypto ikev2 keyring IKEV2_KEYRING
+ peer SPOKES
+ address 0.0.0.0 0.0.0.0
+ pre-shared key local IKEV2_PSK
+ pre-shared key remote IKEV2_PSK
+ 
+[authorization policy]
+aaa new-model
+aaa authorization network IKEV2_AAA local
+crypto authorization policy IKEV2_AUTH_POLICY
+ pool IKEV2_POOL
+ route set interface
+ exit
+ip local pool IKEV2_POOL 172.16.1.1 172.16.1.10
+
+[profile]
+crypto ikev2 profile IKEV2_PROFILE
+ match identity remote fqdn domain IKEV2.LAB
+ identity local fqdn HUB.IKEV2.LAB
+ authentication local pre-share
+ authentication remote pre-share
+ keyring local IKEV2_KEYRING
+ aaa authorization group psk list IKEV2_AAA IKEV2_AUTH_POLICY
+ virtual-template 1
+
+[ipsec profile]
+crypto ipsec profile IPSEC_PROFILE
+ set ikev2-profile IKEV2_PROFILE
+
+[dVTI]
+interface Virtual-Template 1 type tunnel
+ ip unnumbered loopback 1
+ ip nhrp network-id 1
+ ip nhrp redirect
+ tunnel profile ipsec profile IPSEC_PROFILE
+ 
+[bgp]
+ ip prefix-list DENY_DEFAULT seq 5 deny 0.0.0.0/0
+ ip prefix-list DENY_DEFAULT seq 10 permit 0.0.0.0/0 le 32
+ router bgp 1
+ bgp router-id 172.16.1.254
+ bgp listen range 172.16.1.0/24 peer-group IKEV2_SPOKES
+ neighbor IKEV2_SPOKES peer-group
+ neighbor IKEV2_SPOKES remote-as 1
+ neighbor IKEV2_SPOKES transport connection-mode passive
+ neighbor IKEV2_SPOKES update-source Loopback1
+ address-family ipv4 
+  neighbor IKEV2_SPOKES activate
+  neighbor IKEV2_SPOKES default-originate
+  neighbor IKEV2_SPOKES prefix-list DENY_DEFAULT in
+ 
+  

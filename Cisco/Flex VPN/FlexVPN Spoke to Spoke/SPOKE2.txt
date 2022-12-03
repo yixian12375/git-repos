@@ -1,0 +1,47 @@
+[FlexVPN Hub and Spoke]
+conf t
+aaa new-model
+aaa authorization network IKEV2_LOCAL local 
+ip access-list standard IKEV2_LIST
+ permit 2.2.2.2 0.0.0.0
+ exit
+crypto ikev2 authorization policy default
+ route set interface
+ route set access-list IKEV2_LIST
+crypto ikev2 keyring IKEV2_KEYRING
+ peer HUB
+  address 192.1.80.1
+  pre-shared-key IKEV2_PSK
+ peer SPOKES
+  address 0.0.0.0 0.0.0.0
+  pre-shared-key IKEV2_PSK
+ exit
+crypto ikev2 profile IKEV2_PROFILE
+ match identity remote address 0.0.0.0 0.0.0.0
+ authentication local pre-share
+ authentication remote pre-share
+ keyring local IKEV2_KEYRING
+ aaa authorization group psk list IKEV2_LOCAL default
+ virtual-template 2
+crypto ipsec transform-set TRANS esp-aes 256 esp-sha-hmac
+ mode tunnel
+crypto ipsec profile IPSEC_PROFILE
+ set transform-set TRANS
+ set ikev2-profile IKEV2_PROFILE
+ exit
+int tunnel 2
+ ip unnumbered loopback 0
+ ip nhrp network-id 1
+ ip nhrp redirect
+ ip nhrp shortcut virtual-template 2
+ tunnel mode gre ip
+ tunnel source g0/0
+ tunnel dest 192.1.80.1
+ tunnel protection ipsec profile IPSEC_PROFILE
+ exit
+interface Virtual-Template 2 type tunnel
+ ip unnumbered loopback 0
+ ip nhrp network-id 1
+ ip nhrp redirect
+ ip nhrp shortcut virtual-template 2
+ tunnel protection ipsec profile IPSEC_PROFILE

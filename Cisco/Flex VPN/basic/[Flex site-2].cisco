@@ -1,0 +1,39 @@
+[Flex site-2]
+conf t
+crypto ikev2 proposal Site-2
+ encryption 3des
+ integrity sha1
+ group 2
+ exit
+crypto ikev2 policy Policy
+ proposal Site-2
+ exit
+crypto ikev2 keyring PSK-key
+ peer Site-2
+  address 10.1.1.10
+  pre-shared-key cisco
+  exit
+ exit
+crypto ikev2 profile pro
+ match identity remote address 20.1.1.10 255.255.255.255 
+ identity local address 30.1.1.10
+ authentication remote pre-share
+ authentication local pre-share
+ keyring local PSK-key
+ exit
+
+ip access-list extended vpn
+ permit ip host 2.2.2.2 host 1.1.1.1
+ exit
+
+crypto ipsec transform-set TRANS esp-3des esp-md5-hmac 
+ mode tunnel
+ exit
+crypto map cisco 10 ipsec-isakmp 
+ set peer 20.1.1.10
+ set transform-set TRANS 
+ set ikev2-profile pro
+ match address vpn
+ exit
+int g0/1
+ crypto map cisco
